@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0] — 2026-06-30
+
+### Added
+
+- **AI Integration (MiniMax)** — `lua/plugins/codecompanion.lua` with a custom MiniMax adapter for `olimorris/codecompanion.nvim`. MiniMax's Anthropic-compatible API is used with models `MiniMax-M3` (flagship, 1M context), `MiniMax-M2.5` (default, coding), and `MiniMax-M2.7`
+  - Keymaps: `<leader>a` toggles chat, `<leader>A` inline prompt, `ga` (visual) adds selection to chat
+  - Chat opens as a 45-col panel on the right with diff preview
+  - Requires `MINIMAX_API_KEY` environment variable — register at https://platform.minimax.io
+- **README** — added `AI Setup` section with troubleshooting table, model reference, chat variables (`@lsp`, `@buffers`, `@this`), and OS-specific environment setup
+- **CHANGELOG** — added this AI integration entry
+
 ## [1.0.0] — 2026-06-29
 
 ### Added
@@ -10,7 +21,7 @@
 - **Fuzzy Finding** — `<leader>ff` for file picker, `<C-f>` for grep in a top-right floating layout
 - **Terminal** — Floating terminal via `<leader>cc`
 - **Notifications** — Fancy-style notifier with 3s timeout, bottom-up direction
-- **Smooth Scrolling** — Animated scroll with quadInOut easing (200ms total, 10ms step)
+- **Smooth Scrolling** — Animated scroll (quadInOut easing, 200ms total, 10ms step)
 - **Git Integration** — Lazygit launcher via `<leader>gg`
 - **Debug** — nvim-dap with DAP UI and virtual text for:
   - Node.js / JavaScript / TypeScript (inspector protocol)
@@ -21,15 +32,18 @@
 - **Custom Highlights** — Green dashboard palette: `#00ff00`, `#00cc00`, `#88ff88`, `#66ff66`, `#aaffaa`, `#55aa55`
 - **Keymaps** — `ii` to exit insert mode, comprehensive `<leader>` shortcuts
 - **PATH** — Local binaries (`~/.local/go/bin`, `~/go/bin`, `~/.local/bin`) automatically added to PATH
+- **Smart `<leader>q`** — Close buffer, opens explorer on last buffer, `:qa` if called again
 
 ### Fixed
 
 - Explorer keymaps placement corrected to `picker.sources.explorer.win.list.keys`
 - nvim-dap-ui `nvim-nio` dependency added to fix config error
 - nvim-dap-node disabled (archived repository), replaced with Node.js inspector protocol adapter
+- Scroll `easing` option removed (snacks.nvim does not accept strings in that field)
 
 ### Notes
 
 - JetBrainsMono Nerd Font required for icon rendering
 - Lazygit must be installed separately for Git integration
 - Debug adapters require: debugpy (Python) and delve (Go) to be installed on the system
+
