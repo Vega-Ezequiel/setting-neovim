@@ -55,6 +55,7 @@ return {
               list = {
                 keys = {
                   ["n"] = "explorer_add",
+		  ["o"] = "confirm",
                 },
               },
             },
