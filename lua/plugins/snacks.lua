@@ -31,17 +31,6 @@ return {
           { section = "header" },
           { section = "keys", gap = 1, padding = 1 },
           { section = "startup" },
-          {
-            pane = 2,
-            section = "terminal",
-            cmd = "cat " .. vim.fn.stdpath("config") .. "/static/ze77a.txt",
-            height = 35,
-            ttl = 86400,
-            hl = "header",
-            indent = 2,
-          },
-          { pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-          { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
         },
       },
       explorer     = { enabled = true },
@@ -140,11 +129,36 @@ return {
       end, desc = "Cerrar buffer" },
       { "<leader>ff", function() Snacks.picker.files() end, desc = "Buscar archivos" },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "LazyGit" },
-      { "<C-f>", function()
-        Snacks.picker.grep({
-          layout = { preset = "top_right_search" },
-        })
-      end, desc = "Buscar en archivos" },
+
+      -- A1: goto definition con doble f (alias de gd)
+      { "ff", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition", ft = { "lua", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "html", "css" } },
+
+      -- A2: 10 lineas arriba/abajo (smooth-scroll de snacks las hace animadas)
+      { "J", "10j", desc = "10 lineas abajo", mode = { "n", "v" } },
+      { "K", "10k", desc = "10 lineas arriba", mode = { "n", "v" } },
+
+      -- A3: mover entre ventanas con Ctrl + h/j/k/l
+      { "<C-h>", "<C-w>h", desc = "Mover a ventana izquierda", mode = { "n", "v" } },
+      { "<C-j>", "<C-w>j", desc = "Mover a ventana abajo",    mode = { "n", "v" } },
+      { "<C-k>", "<C-w>k", desc = "Mover a ventana arriba",   mode = { "n", "v" } },
+      { "<C-l>", "<C-w>l", desc = "Mover a ventana derecha",  mode = { "n", "v" } },
+
+      -- E: Visual <C-f> -> buscar/reemplazar en buffer | Normal <C-f> -> grep global
+      {
+        "<C-f>",
+        function()
+          if vim.fn.mode():match("^[vV]") then
+            require("utils.find_replace").visual_find_replace()
+          else
+            Snacks.picker.grep({ layout = { preset = "top_right_search" } })
+          end
+        end,
+        mode = { "n", "x" },
+        desc = "Buscar/Reemplazar en buffer (V) | Buscar en archivos (N)",
+      },
+
+      -- A1 alt: gd con snacks picker (más cómodo con teclado)
+      { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition", ft = { "lua", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "html", "css" } },
     },
   },
 }

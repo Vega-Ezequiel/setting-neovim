@@ -46,3 +46,33 @@ vim.opt.rtp:prepend(lazypath)
 -- 4. Cargar todos los plugins de lua/plugins/
 -- =========================================
 require("lazy").setup("plugins")
+
+-- =========================================
+-- 5. Bootstrap: instalar LSPs via Mason
+-- =========================================
+-- Refresca el registry y dispara install de los servers declarados en
+-- lua/plugins/lsp.lua. Es idempotente: corre cada inicio (Mason evita
+-- reinstalar si ya está). El defer es para no chocar con el startup.
+vim.api.nvim_create_user_command("MasonBootstrap", function()
+  require("mason-registry").refresh(function()
+    require("mason-tool-installer").check_install(false, true)
+  end)
+end, { desc = "Bootstrap Mason LSPs" })
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = vim.api.nvim_create_augroup("mason_bootstrap", { clear = true }),
+  callback = function()
+    -- Solo corre si hay servers en ensure_installed y todavia no estan instalados
+    local ok, mti = pcall(require, "mason-tool-installer")
+    if not ok then return end
+    local settings = require("mason-tool-installer").settings or {}
+    if vim.tbl_isempty(settings.ensure_installed or {}) then return end
+    vim.defer_fn(function()
+      require("mason-registry").refresh(function()
+        pcall(function()
+          require("mason-tool-installer").check_install(false, true)
+        end)
+      end)
+    end, 1500)
+  end,
+})
