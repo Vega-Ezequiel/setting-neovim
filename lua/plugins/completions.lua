@@ -40,7 +40,7 @@ return {
           },
           snippets = {
             name = "Snippets",
-            module = "blink.cmp.sources.snippet",
+            module = "blink.cmp.sources.snippets",
             enabled = true,
           },
           buffer = {
@@ -68,11 +68,6 @@ return {
             columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
           },
         },
-      },
-      snippets = {
-        expand = function(args)
-          require("blink.cmp.lib").show_snippet_preview(args)
-        end,
       },
       fuzzy = {
         implementation = "prefer_rust",

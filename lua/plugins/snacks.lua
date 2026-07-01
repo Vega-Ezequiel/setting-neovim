@@ -143,18 +143,38 @@ return {
       { "<C-k>", "<C-w>k", desc = "Mover a ventana arriba",   mode = { "n", "v" } },
       { "<C-l>", "<C-w>l", desc = "Mover a ventana derecha",  mode = { "n", "v" } },
 
-      -- E: Visual <C-f> -> buscar/reemplazar en buffer | Normal <C-f> -> grep global
+      -- E: Visual <C-f> -> buscar en buffer (snacks picker top-right) | Normal <C-f> -> grep global
       {
         "<C-f>",
         function()
           if vim.fn.mode():match("^[vV]") then
-            require("utils.find_replace").visual_find_replace()
+            local sel = ""
+            local save_z = vim.fn.getreg("z")
+            local save_plus = vim.fn.has("clipboard") == 1 and vim.fn.getreg("+") or ""
+            vim.cmd('normal! "zy')
+            sel = vim.fn.getreg("z")
+            vim.fn.setreg("z", save_z)
+            if vim.fn.has("clipboard") == 1 then
+              vim.fn.setreg("+", save_plus)
+            end
+
+            if sel == "" then
+              sel = vim.fn.expand("<cword>")
+            end
+
+            Snacks.picker({
+              source = "lines",
+              search = sel,
+              live = true,
+              layout = { preset = "top_right_search" },
+              title = " Buscar en el archivo ",
+            })
           else
             Snacks.picker.grep({ layout = { preset = "top_right_search" } })
           end
         end,
         mode = { "n", "x" },
-        desc = "Buscar/Reemplazar en buffer (V) | Buscar en archivos (N)",
+        desc = "Buscar en buffer (V) | Buscar en archivos (N)",
       },
 
       -- A1 alt: gd con snacks picker (más cómodo con teclado)
