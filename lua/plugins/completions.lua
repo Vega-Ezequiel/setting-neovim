@@ -1,9 +1,13 @@
 return {
   {
     "saghen/blink.cmp",
+    version = "1.*",
     event = "InsertEnter",
     dependencies = {
-      "saghen/blink.lib",
+      {
+        "saghen/blink.lib",
+        version = "1.*",
+      },
       "rafamadriz/friendly-snippets",
     },
     opts = {
@@ -62,7 +66,6 @@ return {
           border = "rounded",
           draw = {
             columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
-            components = { "kind_icon" },
           },
         },
       },
@@ -75,7 +78,6 @@ return {
         implementation = "prefer_rust",
       },
       appearance = {
-        use_nvim_native_pum = false,
         nerd_font_variant = "mono",
       },
     },
